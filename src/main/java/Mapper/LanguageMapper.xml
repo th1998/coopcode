@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Dao.LanguageDao">
+	<!-- 查询全部语言类型 -->
+	<select id="getAllLanguage" resultType="Model.Programinglanguage">
+		select * from programinglanguage
+	</select>
+	
+	<!-- 添加语言 -->
+	<insert id="addLanguage" parameterType="String">
+		insert into programinglanguage(language) values(#{language})
+	</insert>
+	
+	<!-- 删除语言 -->
+	<delete id="delLanguage" parameterType="int">
+		delete from programinglanguage where id = #{id}
+	</delete>
+</mapper>

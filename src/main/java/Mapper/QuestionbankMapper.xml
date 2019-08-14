@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Dao.QuestionbankDao">
+	<!--查询题库列表-->
+	<resultMap id="Interview" type="Model.Interview">
+		<id property="id" column="id"/>
+		<result property="languageId" column="languageId"/>
+		<result property="title" column="title"/>
+		<result property="content" column="content"/>
+		<result property="difficulty" column="difficulty"/>
+		<association property="language" javaType="Model.Programinglanguage">
+			<id property="id" column="id"/> 
+			<result property="language" column="language"/>
+		</association>
+	</resultMap>
+	
+	<select id="getInterview" resultMap="Interview">
+		select * from interview iv,programinglanguage pl 
+		where pl.id = iv.languageId
+	</select>
+	
+	<!-- 根据id查询题 -->
+	<select id="findInterview" parameterType="int" resultMap="Interview">
+		select * from interview iv,programinglanguage pl 
+		where pl.id = iv.languageId
+		and iv.id = #{id}
+	</select>
+	
+	<!-- 根据条件模糊查询 -->
+	<select id="likeInterview" resultMap="Interview" parameterType="Model.Interview">
+		select * from interview iv,programinglanguage pl 
+		<where> 
+			<if test="language!=null">
+				and language like '%${language}%'
+			</if>
+			<if test="title!=null">
+				and title like '%${title}%'
+			</if>
+		</where>
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="delAll" parameterType="List">
+		delete from interview where id in 
+		<foreach collection="list" item="arr" open="(" separator="," close=")">
+            #{arr}
+        </foreach>
+	</delete>
+	
+	<!-- 单个删除 -->
+	<delete id="del" parameterType="int">
+		delete from interview where id = #{id}
+	</delete>
+	
+	<!-- 修改题 -->
+	<update id="updateQuestionbank" parameterType="Model.Interview">
+		update interview
+		set languageId=#{languageId},title=#{title},content=#{content},difficulty=#{difficulty}
+		where id=#{id}
+	</update>
+	
+	<!-- 添加题 -->
+	<insert id="addInterview" parameterType="Model.Interview">
+		insert into interview(languageId,title,content,difficulty)
+		values(#{languageId},#{title},#{content},#{difficulty})
+	</insert>
+</mapper>
